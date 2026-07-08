@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Christophe Ortega — Portfolio</title>
 <meta name="description" content="Senior integrated producer / account lead. Case studies from Jets.com, Bushmills, and Great Jones Distilling.">
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
 <style>
   :root{
     --ikb:#002FA7;
@@ -37,10 +42,10 @@
     border-bottom:1px solid var(--hair);
   }
   .navrow{
-    display:flex; align-items:center; justify-content:space-between;
+    position:relative; display:flex; align-items:center; justify-content:space-between;
     padding:16px 0; max-width:1080px; margin:0 auto; padding-left:28px; padding-right:28px;
   }
-  .brand{font-family:var(--serif); font-size:17px; letter-spacing:0.01em;}
+  .brand{font-family:var(--serif); font-size:17px; letter-spacing:0.01em; white-space:nowrap;}
   nav.links{display:flex; gap:26px;}
   nav.links a{
     font-size:13px; color:var(--ink); text-decoration:none;
@@ -48,6 +53,12 @@
     border-bottom:1px solid transparent; padding-bottom:3px;
   }
   nav.links a:hover{opacity:1; border-color:var(--ikb); color:var(--ikb);}
+
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:30px; height:30px; padding:0; background:none; border:none; cursor:pointer;
+  }
+  .nav-toggle span{display:block; width:100%; height:2px; background:var(--ink); border-radius:1px;}
 
   .hero{padding-top:96px; padding-bottom:64px;}
   .hero h1{
@@ -145,9 +156,19 @@
   @media (max-width:640px){
     .case-kicker, .case-body, .sub-label, .grid, .videogrid, .placeholder-note{margin-left:0;}
     .case-head{gap:12px;}
-    nav.links{gap:16px;}
-    nav.links a{font-size:11px;}
     .grid{grid-template-columns:repeat(2,1fr);}
+
+    .nav-toggle{display:flex;}
+    nav.links{
+      display:none; position:absolute; top:100%; left:0; right:0;
+      flex-direction:column; gap:0; background:var(--paper);
+      border-bottom:1px solid var(--hair); box-shadow:0 8px 16px rgba(10,10,9,0.06);
+    }
+    nav.links.open{display:flex;}
+    nav.links a{
+      font-size:13px; padding:14px 28px; border-bottom:1px solid var(--hair); opacity:1;
+    }
+    nav.links a:last-child{border-bottom:none;}
   }
   @media (max-width:420px){
     .grid{grid-template-columns:1fr;}
@@ -159,12 +180,15 @@
 <header class="site">
   <div class="navrow">
     <a class="brand plain" href="#top">Christophe Ortega</a>
-    <nav class="links">
+    <nav class="links" id="navLinks">
       <a href="#jets">Jets.com</a>
       <a href="#bushmills">Bushmills</a>
       <a href="#greatjones">Great Jones</a>
       <a href="#contact">Contact</a>
     </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -375,6 +399,19 @@
 </div>
 
 <script>
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', function(){
+    var isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
   document.querySelectorAll('.video-frame').forEach(function(frame){
     frame.addEventListener('click', function(){
       var src = frame.getAttribute('data-video');
